@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -16,12 +18,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.qi.xiaohui.dingdang.R;
+import com.qi.xiaohui.dingdang.adapter.NewsAdapter;
 import com.qi.xiaohui.dingdang.application.DingDangApplication;
 import com.qi.xiaohui.dingdang.dao.DataStore;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private DataStore dataStore;
+    private RecyclerView mRecycleView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
 
     public static void launchActivity(Activity fromActivity){
         Intent i = new Intent(fromActivity, HomeActivity.class);
@@ -36,6 +42,12 @@ public class HomeActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         dataStore = DingDangApplication.getDataStore();
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        mRecycleView = (RecyclerView) findViewById(R.id.resultView);
+        mRecycleView.setHasFixedSize(false);
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecycleView.setLayoutManager(mLayoutManager);
+
+        mRecycleView.setAdapter(new NewsAdapter(dataStore.getResults(getResources().getString(R.string.default_category)), getApplicationContext()));
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

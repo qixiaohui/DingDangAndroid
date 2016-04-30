@@ -7,7 +7,7 @@ import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Result extends BaseObservable{
+public class Result {
 
     @SerializedName("title")
     @Expose
