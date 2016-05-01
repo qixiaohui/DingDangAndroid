@@ -1,5 +1,6 @@
 package com.qi.xiaohui.dingdang.dao;
 
+import com.qi.xiaohui.dingdang.model.webcontent.WebContent;
 import com.qi.xiaohui.dingdang.model.menu.Menu;
 import com.qi.xiaohui.dingdang.model.table.Table;
 
@@ -20,4 +21,7 @@ public interface Gateway {
 
     @GET("news/{tablename}")
     Call<Table> getTable(@Path("tablename") String tablename, @Header("pagination") String pagination,@Header("language") String language);
+
+    @GET("content")
+    Call<List<WebContent>> getWenContent(@Header("link") String link,@Header("id") String id);
 }

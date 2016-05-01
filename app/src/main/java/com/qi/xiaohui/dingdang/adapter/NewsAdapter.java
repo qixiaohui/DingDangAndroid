@@ -1,5 +1,6 @@
 package com.qi.xiaohui.dingdang.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
@@ -9,9 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.qi.xiaohui.dingdang.R;
+import com.qi.xiaohui.dingdang.activity.ContentActivity;
 import com.qi.xiaohui.dingdang.model.table.Result;
 import com.squareup.picasso.Picasso;
 
@@ -24,20 +27,24 @@ import java.util.zip.Inflater;
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     private static ArrayList<Result> results;
     private static Context mContext;
+    private static Activity fromActivity;
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
         public TextView title;
         public ImageView poster;
+        public LinearLayout bigButton;
         public ViewHolder(View v){
             super(v);
             title = (TextView) v.findViewById(R.id.title);
             poster = (ImageView) v.findViewById(R.id.poster);
+            bigButton = (LinearLayout) v.findViewById(R.id.bigButton);
         }
     }
 
-    public NewsAdapter(ArrayList<Result> results, Context context){
+    public NewsAdapter(ArrayList<Result> results, Context context, Activity activity){
         this.results = results;
         mContext = context;
+        fromActivity = activity;
     }
 
     @Override
@@ -47,13 +54,24 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
         holder.title.setText(results.get(position).getTitle());
         if(results.get(position).getIurl() != null && !results.get(position).getIurl().equals("") ){
             Picasso.with(mContext).load(results.get(position).getIurl()).into(holder.poster);
         }else{
             holder.poster.setVisibility(View.GONE);
         }
+
+        holder.bigButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ContentActivity.launchActivity(fromActivity, results.get(position).getUrl(), results.get(position).getTitle().replaceAll("[^a-zA-Z0-9]+",""));
+            }
+        });
+    }
+
+    public void addResults(ArrayList<Result> moreResults){
+        this.results.addAll(moreResults);
     }
 
     @Override

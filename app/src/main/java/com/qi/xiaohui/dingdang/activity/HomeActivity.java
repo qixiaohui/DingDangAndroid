@@ -35,6 +35,9 @@ public class HomeActivity extends AppCompatActivity
     private ViewPager viewPager;
     private Toolbar toolbar;
 
+    public static final String URL = "URL";
+    public static final String ID = "ID";
+
     public static void launchActivity(Activity fromActivity){
         Intent i = new Intent(fromActivity, HomeActivity.class);
         fromActivity.startActivity(i);
