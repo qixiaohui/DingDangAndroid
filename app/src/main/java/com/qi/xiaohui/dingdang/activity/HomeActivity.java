@@ -33,6 +33,7 @@ public class HomeActivity extends AppCompatActivity
     private DataStore dataStore;
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    private Toolbar toolbar;
 
     public static void launchActivity(Activity fromActivity){
         Intent i = new Intent(fromActivity, HomeActivity.class);
@@ -43,9 +44,8 @@ public class HomeActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
         dataStore = DingDangApplication.getDataStore();
+        _updateToolBarTitle(dataStore.getMenus().get(0).getGenre());
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 
         fab.setOnClickListener(new View.OnClickListener() {
@@ -59,8 +59,6 @@ public class HomeActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         tabLayout = (TabLayout) findViewById(R.id.submenuTab);
         viewPager = (ViewPager) findViewById(R.id.viewpager);
-        ContentHomeAdapter contentHomeAdapter = new ContentHomeAdapter(getSupportFragmentManager(), dataStore.getMenus().get(0).getCategory());
-        viewPager.setAdapter(contentHomeAdapter);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -126,6 +124,7 @@ public class HomeActivity extends AppCompatActivity
                     if(menu1.getGenre().equals(item.getTitle())){
                         _generateTabs(dataStore.getMenus().indexOf(menu1));
                         drawer.closeDrawer(Gravity.LEFT);
+                        _updateToolBarTitle(menu1.getGenre());
                         break;
                     }
                 }
@@ -135,12 +134,14 @@ public class HomeActivity extends AppCompatActivity
     }
 
     private void _generateTabs(int index){
-        if(tabLayout.getTabCount() > 0){
-            tabLayout.removeAllTabs();
-        }
-        for(String title : dataStore.getMenus().get(index).getCategory()){
-            tabLayout.addTab(tabLayout.newTab().setText(title));
-        }
+        ContentHomeAdapter contentHomeAdapter = new ContentHomeAdapter(getSupportFragmentManager(), dataStore.getMenus().get(index).getCategory());
+        viewPager.setAdapter(contentHomeAdapter);
         tabLayout.setupWithViewPager(viewPager);
+    }
+
+    private void _updateToolBarTitle(String title){
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(title);
+        setSupportActionBar(toolbar);
     }
 }
