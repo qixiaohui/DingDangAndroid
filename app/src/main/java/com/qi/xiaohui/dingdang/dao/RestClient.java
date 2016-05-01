@@ -7,7 +7,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Created by qixiaohui on 4/4/16.
  */
 public class RestClient {
-    static final String baseUrl = "http://10.0.0.3:2000/";
+    static final String baseUrl = "http://polar-sands-49796.herokuapp.com/";
 
     public static Gateway getGateway(){
         Retrofit retrofit = new Retrofit.Builder()

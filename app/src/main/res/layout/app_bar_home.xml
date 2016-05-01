@@ -18,10 +18,28 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
+        <android.support.design.widget.TabLayout
+            android:id="@+id/submenuTab"
+            app:tabMaxWidth="0dp"
+            app:tabGravity="fill"
+            app:tabMode="scrollable"
+            app:tabTextColor="@color/white"
+            app:tabSelectedTextColor="@color/colorAccent"
+            android:background="@color/colorPrimary"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent">
+
+        </android.support.design.widget.TabLayout>
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_home" />
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
+        android:paddingTop="@dimen/recycle_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@android:color/white" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

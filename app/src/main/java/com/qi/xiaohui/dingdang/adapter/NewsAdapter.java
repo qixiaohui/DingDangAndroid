@@ -4,6 +4,7 @@ import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,7 +49,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.title.setText(results.get(position).getTitle());
-        if(results.get(position).getIurl() != null){
+        if(results.get(position).getIurl() != null && !results.get(position).getIurl().equals("") ){
             Picasso.with(mContext).load(results.get(position).getIurl()).into(holder.poster);
         }else{
             holder.poster.setVisibility(View.GONE);

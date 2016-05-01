@@ -1,6 +1,7 @@
 package com.qi.xiaohui.dingdang.dao;
 
 import android.content.Context;
+import android.util.LruCache;
 
 import com.qi.xiaohui.dingdang.model.menu.Menu;
 import com.qi.xiaohui.dingdang.model.table.Result;
@@ -13,12 +14,13 @@ import java.util.List;
  * Created by TQi on 4/29/16.
  */
 public class DataStore {
-    private static HashMap<String, ArrayList<Result>> mTableStore;
+    private static LruCache<String, ArrayList<Result>> mTableStore;
     private static List<Menu> mMenus;
 
     public DataStore() {
         if(mTableStore == null){
-            mTableStore = new HashMap<>();
+            mTableStore = new LruCache<>(20);
+
         }
 
         if(mMenus == null) {
