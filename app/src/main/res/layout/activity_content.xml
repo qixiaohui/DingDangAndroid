@@ -43,6 +43,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/webView" />
+        <Button
+            android:id="@+id/visitWebsite"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:textColor="@color/titleBlk"
+            android:text="@string/originla_link"
+            android:textAlignment="center" />
     </LinearLayout>
     </ScrollView>
 </android.support.design.widget.CoordinatorLayout>

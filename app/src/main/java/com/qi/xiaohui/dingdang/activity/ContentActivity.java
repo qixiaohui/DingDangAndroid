@@ -3,9 +3,16 @@ package com.qi.xiaohui.dingdang.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -33,6 +40,8 @@ public class ContentActivity extends AppCompatActivity{
     private TextView title;
     private TextView date;
     private Result result;
+    private Button visitWebsite;
+    private boolean firstTimeLoad = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +49,7 @@ public class ContentActivity extends AppCompatActivity{
         webView = (WebView)findViewById(R.id.webView);
         title = (TextView) findViewById(R.id.title);
         date = (TextView) findViewById(R.id.date);
+        visitWebsite = (Button) findViewById(R.id.visitWebsite);
         result = new Gson().fromJson(getIntent().getStringExtra(CONTENT_EXTRA), Result.class);
         title.setText(result.getTitle());
         date.setText(new SimpleDateFormat("MM/dd/yyyy").format(new Date((long)(result.getDate()*1000))));
@@ -65,8 +75,34 @@ public class ContentActivity extends AppCompatActivity{
     private void _loadPage(String dom){
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setDomStorageEnabled(true);
-        Log.i("web", dom);
         webView.loadData(dom, "text/html; charset=utf-8", "UTF-8");
+        webView.setWebViewClient(new WebViewClient(){
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(firstTimeLoad) {
+                            if (webView.getMeasuredHeight() > 1000) {
+                                visitWebsite.setVisibility(View.VISIBLE);
+                            } else {
+                                title.setVisibility(View.GONE);
+                                date.setVisibility(View.GONE);
+                                DisplayMetrics metrics = getResources().getDisplayMetrics();
+                                int height = metrics.heightPixels;
+                                webView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height));
+                                webView.loadUrl(result.getUrl());
+                            }
+                            firstTimeLoad = !firstTimeLoad;
+                        }
+                    }
+                }, 1000);
+            }
+
+
+        });
     }
 
     public static void launchActivity(Activity fromActivity, Result result){
