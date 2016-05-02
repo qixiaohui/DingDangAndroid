@@ -70,9 +70,9 @@ public class ContentHomeFragment extends android.support.v4.app.Fragment {
         mRecycleView.addOnScrollListener(new EndlessRecyclerListener((LinearLayoutManager)mLayoutManager){
             @Override
             public void onLoadMore(int current_page) {
-                if(dataStore.getResults(pageTitle).size() < maxSize-10 && dataStore.getResults(pageTitle).size() > 10){
-                    getResults(pageTitle, Integer.toString(current_page/10));
-                }
+//                if(dataStore.getResults(pageTitle).size() < maxSize-10 && dataStore.getResults(pageTitle).size() > 10){
+//                    getResults(pageTitle, Integer.toString(current_page/10));
+//                }
             }
         });
 
@@ -111,6 +111,7 @@ public class ContentHomeFragment extends android.support.v4.app.Fragment {
     private void _setAdapter(ArrayList<Result> results){
         mNewsAdapter = new NewsAdapter(results, getContext(), getActivity());
         mRecycleView.setAdapter(mNewsAdapter);
+        mNewsAdapter.notifyDataSetChanged();
     }
 }
 

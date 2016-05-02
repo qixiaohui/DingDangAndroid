@@ -65,7 +65,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         holder.bigButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ContentActivity.launchActivity(fromActivity, results.get(position).getUrl(), results.get(position).getTitle().replaceAll("[^a-zA-Z0-9]+",""));
+                ContentActivity.launchActivity(fromActivity, results.get(position));
             }
         });
     }

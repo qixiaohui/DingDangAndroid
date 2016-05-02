@@ -23,7 +23,7 @@
         </activity>
         <activity android:name=".activity.HomeActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.ContentActivity" android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar" />
+        <activity android:name=".activity.ContentActivity" theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

@@ -19,7 +19,7 @@ public class DataStore {
 
     public DataStore() {
         if(mTableStore == null){
-            mTableStore = new LruCache<>(100);
+            mTableStore = new LruCache<>(20);
 
         }
 
