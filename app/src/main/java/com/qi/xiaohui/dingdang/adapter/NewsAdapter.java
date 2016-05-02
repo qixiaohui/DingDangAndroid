@@ -25,9 +25,9 @@ import java.util.zip.Inflater;
  * Created by TQi on 4/30/16.
  */
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
-    private static ArrayList<Result> results;
-    private static Context mContext;
-    private static Activity fromActivity;
+    private ArrayList<Result> results;
+    private Context mContext;
+    private Activity fromActivity;
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
         public TextView title;

@@ -33,7 +33,7 @@ import retrofit2.Response;
 public class ContentHomeFragment extends android.support.v4.app.Fragment {
     public static final String PAGE_TITLE = "PAGE_TITLE";
     private DataStore dataStore;
-    private static String pageTitle = "";
+    private String pageTitle = "";
     private RecyclerView mRecycleView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -111,7 +111,7 @@ public class ContentHomeFragment extends android.support.v4.app.Fragment {
     private void _setAdapter(ArrayList<Result> results){
         mNewsAdapter = new NewsAdapter(results, getContext(), getActivity());
         mRecycleView.setAdapter(mNewsAdapter);
-        mNewsAdapter.notifyDataSetChanged();
+        //mNewsAdapter.notifyDataSetChanged();
     }
 }
 
