@@ -35,6 +35,7 @@ public class HomeActivity extends AppCompatActivity
     private ViewPager viewPager;
     private Toolbar toolbar;
 
+    public static final String MAX_SIZE = "MAX_SIZE";
     public static final String URL = "URL";
     public static final String ID = "ID";
 

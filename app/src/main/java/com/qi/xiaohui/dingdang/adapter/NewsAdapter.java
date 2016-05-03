@@ -70,8 +70,10 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         });
     }
 
-    public void addResults(ArrayList<Result> moreResults){
-        this.results.addAll(moreResults);
+    public void addResults(ArrayList<Result> moreResults, int index){
+        if(index >= this.results.size()) {
+            this.results.addAll(moreResults);
+        }
     }
 
     @Override

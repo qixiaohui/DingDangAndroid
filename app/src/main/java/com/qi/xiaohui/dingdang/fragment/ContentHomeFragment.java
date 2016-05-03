@@ -39,6 +39,7 @@ public class ContentHomeFragment extends android.support.v4.app.Fragment {
     private RecyclerView.LayoutManager mLayoutManager;
     private NewsAdapter mNewsAdapter;
     private String title;
+    private int previousPage = 0;
     //max items can get from server
     private int maxSize = 0;
 
@@ -70,14 +71,19 @@ public class ContentHomeFragment extends android.support.v4.app.Fragment {
         mRecycleView.addOnScrollListener(new EndlessRecyclerListener((LinearLayoutManager)mLayoutManager){
             @Override
             public void onLoadMore(int current_page) {
-//                if(dataStore.getResults(pageTitle).size() < maxSize-10 && dataStore.getResults(pageTitle).size() > 10){
-//                    getResults(pageTitle, Integer.toString(current_page/10));
-//                }
+                if(current_page != previousPage){
+                    previousPage = current_page;
+                }else{
+                    return;
+                }
+                if(maxSize > dataStore.getResults(pageTitle).size()){
+                    getResults(pageTitle, Integer.toString((current_page-1)*10+1));
+                }
             }
         });
 
         if(dataStore.getResults(pageTitle) != null) {
-            _setAdapter(dataStore.getResults(pageTitle));
+            _setAdapter(dataStore.getResults(pageTitle), pageTitle);
         }else{
             getResults(pageTitle, "1");
         }
@@ -92,11 +98,11 @@ public class ContentHomeFragment extends android.support.v4.app.Fragment {
             public void onResponse(Call<Table> call, Response<Table> response) {
                 if(Integer.parseInt(pageIndex) == 1) {
                     dataStore.setResults(title, (ArrayList) response.body().getResults());
-                    _setAdapter((ArrayList) response.body().getResults());
-                    maxSize = response.body().getCount();
+                    dataStore.setMax(title, response.body().getCount());
+                    _setAdapter((ArrayList) response.body().getResults(), title);
                 }else{
-                    dataStore.appendTable(title, (ArrayList)response.body().getResults());
-                    mNewsAdapter.addResults((ArrayList) response.body().getResults());
+                    dataStore.appendTable(title, (ArrayList)response.body().getResults(), Integer.parseInt(pageIndex));
+                    mNewsAdapter.addResults((ArrayList) response.body().getResults(), Integer.parseInt(pageIndex));
                     mNewsAdapter.notifyDataSetChanged();
                 }
             }
@@ -108,10 +114,11 @@ public class ContentHomeFragment extends android.support.v4.app.Fragment {
         });
     }
 
-    private void _setAdapter(ArrayList<Result> results){
+    private void _setAdapter(ArrayList<Result> results, String title){
         mNewsAdapter = new NewsAdapter(results, getContext(), getActivity());
         mRecycleView.setAdapter(mNewsAdapter);
-        //mNewsAdapter.notifyDataSetChanged();
+        maxSize = dataStore.getMax(title);
+        mNewsAdapter.notifyDataSetChanged();
     }
 }
 

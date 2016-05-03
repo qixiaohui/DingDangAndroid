@@ -61,6 +61,7 @@ public class SplashActivity extends Activity {
                 @Override
                 public void onResponse(Call<Table> call, Response<Table> response) {
                     dataStore.setResults(getResources().getString(R.string.default_category), (ArrayList)response.body().getResults());
+                    dataStore.setMax(getResources().getString(R.string.default_category), response.body().getCount());
                     if(dataStore.getMenus().size() > 0){
                         _goToMain();
                     }

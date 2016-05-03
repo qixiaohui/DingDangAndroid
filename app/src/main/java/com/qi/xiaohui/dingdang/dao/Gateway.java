@@ -23,5 +23,5 @@ public interface Gateway {
     Call<Table> getTable(@Path("tablename") String tablename, @Header("pagination") String pagination,@Header("language") String language);
 
     @GET("content")
-    Call<List<WebContent>> getWenContent(@Header("link") String link,@Header("id") String id);
+    Call<List<WebContent>> getWebContent(@Header("link") String link,@Header("id") String id);
 }
