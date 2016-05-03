@@ -96,14 +96,16 @@ public class ContentHomeFragment extends android.support.v4.app.Fragment {
         tableCall.enqueue(new Callback<Table>() {
             @Override
             public void onResponse(Call<Table> call, Response<Table> response) {
-                if(Integer.parseInt(pageIndex) == 1) {
-                    dataStore.setResults(title, (ArrayList) response.body().getResults());
-                    dataStore.setMax(title, response.body().getCount());
-                    _setAdapter((ArrayList) response.body().getResults(), title);
-                }else{
-                    dataStore.appendTable(title, (ArrayList)response.body().getResults(), Integer.parseInt(pageIndex));
-                    mNewsAdapter.addResults((ArrayList) response.body().getResults(), Integer.parseInt(pageIndex));
-                    mNewsAdapter.notifyDataSetChanged();
+                if(response.body() != null) {
+                    if (Integer.parseInt(pageIndex) == 1) {
+                        dataStore.setResults(title, (ArrayList) response.body().getResults());
+                        dataStore.setMax(title, response.body().getCount());
+                        _setAdapter((ArrayList) response.body().getResults(), title);
+                    } else {
+                        dataStore.appendTable(title, (ArrayList) response.body().getResults(), Integer.parseInt(pageIndex));
+                        mNewsAdapter.addResults((ArrayList) response.body().getResults(), Integer.parseInt(pageIndex));
+                        mNewsAdapter.notifyDataSetChanged();
+                    }
                 }
             }
 
@@ -115,7 +117,7 @@ public class ContentHomeFragment extends android.support.v4.app.Fragment {
     }
 
     private void _setAdapter(ArrayList<Result> results, String title){
-        mNewsAdapter = new NewsAdapter(results, getContext(), getActivity());
+        mNewsAdapter = new NewsAdapter(results, getContext(), getActivity(), title);
         mRecycleView.setAdapter(mNewsAdapter);
         maxSize = dataStore.getMax(title);
         mNewsAdapter.notifyDataSetChanged();

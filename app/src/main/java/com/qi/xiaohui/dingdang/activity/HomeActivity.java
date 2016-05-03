@@ -1,6 +1,8 @@
 package com.qi.xiaohui.dingdang.activity;
 
 import android.app.Activity;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -9,6 +11,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.SubMenu;
@@ -27,6 +30,9 @@ import com.qi.xiaohui.dingdang.adapter.ContentHomeAdapter;
 import com.qi.xiaohui.dingdang.adapter.NewsAdapter;
 import com.qi.xiaohui.dingdang.application.DingDangApplication;
 import com.qi.xiaohui.dingdang.dao.DataStore;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -89,6 +95,9 @@ public class HomeActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.home, menu);
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         return true;
     }
 
@@ -148,4 +157,5 @@ public class HomeActivity extends AppCompatActivity
         toolbar.setTitle(title);
         setSupportActionBar(toolbar);
     }
+
 }

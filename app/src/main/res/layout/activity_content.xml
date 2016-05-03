@@ -11,11 +11,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            android:background="?attr/colorPrimary" />
     </android.support.design.widget.AppBarLayout>
     <ScrollView
         android:layout_height="match_parent"
         android:layout_width="match_parent">
     <LinearLayout
+        android:paddingTop="@dimen/toolbar_margin"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:background="@color/white"
@@ -41,7 +48,7 @@
         android:textStyle="bold" />
     <WebView
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:id="@+id/webView" />
         <Button
             android:id="@+id/visitWebsite"

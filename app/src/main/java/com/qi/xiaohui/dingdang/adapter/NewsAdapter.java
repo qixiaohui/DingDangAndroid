@@ -28,6 +28,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     private ArrayList<Result> results;
     private Context mContext;
     private Activity fromActivity;
+    private String mTitle;
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
         public TextView title;
@@ -41,10 +42,11 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         }
     }
 
-    public NewsAdapter(ArrayList<Result> results, Context context, Activity activity){
+    public NewsAdapter(ArrayList<Result> results, Context context, Activity activity, String title){
         this.results = results;
         mContext = context;
         fromActivity = activity;
+        mTitle = title;
     }
 
     @Override
@@ -65,7 +67,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         holder.bigButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ContentActivity.launchActivity(fromActivity, results.get(position));
+                ContentActivity.launchActivity(fromActivity, results.get(position), mTitle);
             }
         });
     }

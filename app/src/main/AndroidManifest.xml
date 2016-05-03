@@ -22,8 +22,18 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.HomeActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activity.ContentActivity" theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar" >
+            <meta-data android:name="android.app.default_searchable" android:value=".activity.SearchResultActivity" />
+        </activity>
+        <activity android:name=".activity.ContentActivity" android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activity.SearchResultActivity" android:theme="@style/AppTheme.NoActionBar"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <meta-data android:name="android.app.searchable" android:resource="@xml/searchable" />
+        </activity>
     </application>
 
 </manifest>
