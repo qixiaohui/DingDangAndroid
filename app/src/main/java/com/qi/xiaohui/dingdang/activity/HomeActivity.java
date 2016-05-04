@@ -30,6 +30,7 @@ import com.qi.xiaohui.dingdang.adapter.ContentHomeAdapter;
 import com.qi.xiaohui.dingdang.adapter.NewsAdapter;
 import com.qi.xiaohui.dingdang.application.DingDangApplication;
 import com.qi.xiaohui.dingdang.dao.DataStore;
+import com.qi.xiaohui.dingdang.fragment.ContentHomeFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +41,7 @@ public class HomeActivity extends AppCompatActivity
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private Toolbar toolbar;
+    private ContentHomeAdapter contentHomeAdapter;
 
     public static final String MAX_SIZE = "MAX_SIZE";
     public static final String URL = "URL";
@@ -61,8 +63,14 @@ public class HomeActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Log.i("current index", Integer.toString(viewPager.getCurrentItem()));
+                ContentHomeFragment contentHomeFragment = ((ContentHomeFragment) contentHomeAdapter.getCachedFragment(viewPager.getCurrentItem()));
+                if(contentHomeFragment != null) {
+                    contentHomeFragment.refreshView();
+                }else{
+                    Snackbar.make(view, "Can't refresh right now, please try later.", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
             }
         });
 
@@ -133,8 +141,8 @@ public class HomeActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
-                for(com.qi.xiaohui.dingdang.model.menu.Menu menu1 : dataStore.getMenus()) {
-                    if(menu1.getGenre().equals(item.getTitle())){
+                for (com.qi.xiaohui.dingdang.model.menu.Menu menu1 : dataStore.getMenus()) {
+                    if (menu1.getGenre().equals(item.getTitle())) {
                         _generateTabs(dataStore.getMenus().indexOf(menu1));
                         drawer.closeDrawer(Gravity.LEFT);
                         _updateToolBarTitle(menu1.getGenre());
@@ -147,7 +155,7 @@ public class HomeActivity extends AppCompatActivity
     }
 
     private void _generateTabs(int index){
-        ContentHomeAdapter contentHomeAdapter = new ContentHomeAdapter(getSupportFragmentManager(), dataStore.getMenus().get(index).getCategory());
+        contentHomeAdapter = new ContentHomeAdapter(getSupportFragmentManager(), dataStore.getMenus().get(index).getCategory());
         viewPager.setAdapter(contentHomeAdapter);
         tabLayout.setupWithViewPager(viewPager);
     }

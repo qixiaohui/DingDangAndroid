@@ -68,20 +68,7 @@ public class ContentHomeFragment extends android.support.v4.app.Fragment {
         mRecycleView.setHasFixedSize(false);
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecycleView.setLayoutManager(mLayoutManager);
-        mRecycleView.addOnScrollListener(new EndlessRecyclerListener((LinearLayoutManager)mLayoutManager){
-            @Override
-            public void onLoadMore(int current_page) {
-                if(current_page != previousPage){
-                    previousPage = current_page;
-                }else{
-                    return;
-                }
-                if(maxSize > dataStore.getResults(pageTitle).size()){
-                    getResults(pageTitle, Integer.toString((current_page-1)*10+1));
-                }
-            }
-        });
-
+        _buildScrollListener();
         if(dataStore.getResults(pageTitle) != null) {
             _setAdapter(dataStore.getResults(pageTitle), pageTitle);
         }else{
@@ -122,5 +109,29 @@ public class ContentHomeFragment extends android.support.v4.app.Fragment {
         maxSize = dataStore.getMax(title);
         mNewsAdapter.notifyDataSetChanged();
     }
+
+    public void refreshView(){
+        previousPage = 0;
+        maxSize = 0;
+        getResults(pageTitle, "1");
+        _buildScrollListener();
+    }
+
+    private void _buildScrollListener(){
+        mRecycleView.addOnScrollListener(new EndlessRecyclerListener((LinearLayoutManager)mLayoutManager){
+            @Override
+            public void onLoadMore(int current_page) {
+                if(current_page != previousPage){
+                    previousPage = current_page;
+                }else{
+                    return;
+                }
+                if(maxSize > dataStore.getResults(pageTitle).size()){
+                    getResults(pageTitle, Integer.toString((current_page-1)*10+1));
+                }
+            }
+        });
+    }
 }
+
 

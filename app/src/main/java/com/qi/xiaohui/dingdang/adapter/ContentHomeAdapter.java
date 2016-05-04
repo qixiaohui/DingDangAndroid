@@ -9,6 +9,7 @@ import com.qi.xiaohui.dingdang.application.DingDangApplication;
 import com.qi.xiaohui.dingdang.dao.DataStore;
 import com.qi.xiaohui.dingdang.fragment.ContentHomeFragment;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -17,18 +18,34 @@ import java.util.List;
 public class ContentHomeAdapter extends FragmentStatePagerAdapter {
     private DataStore dataStore;
     private List<String> mTitles;
+    private HashMap<Integer, Fragment> fragmentCache;
 
     public ContentHomeAdapter(FragmentManager fragmentManager, List<String> titles){
         super(fragmentManager);
         if(dataStore == null){
             dataStore = DingDangApplication.getDataStore();
         }
+        if(fragmentCache == null){
+            fragmentCache = new HashMap<>();
+        }
         mTitles = titles;
+    }
+
+    public Fragment getCachedFragment(int position){
+        if(fragmentCache.get(position) != null){
+            return fragmentCache.get(position);
+        }else{
+            return null;
+        }
     }
 
     @Override
     public Fragment getItem(int position) {
-        return ContentHomeFragment.newInstance(mTitles.get(position));
+        Fragment fragment = ContentHomeFragment.newInstance(mTitles.get(position));
+        if(fragmentCache.get(position) == null){
+            fragmentCache.put(position, fragment);
+        }
+        return fragment;
     }
 
     @Override

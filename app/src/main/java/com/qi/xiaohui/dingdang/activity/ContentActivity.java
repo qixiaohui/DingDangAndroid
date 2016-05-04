@@ -3,6 +3,7 @@ package com.qi.xiaohui.dingdang.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Point;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -14,10 +15,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -50,6 +53,10 @@ public class ContentActivity extends AppCompatActivity{
     private Result result;
     private Button visitWebsite;
     private Toolbar toolbar;
+    private Button button;
+    private ScrollView scrollView;
+    private WebView mWebContent;
+
     private boolean firstTimeLoad = true;
     private String subtitle;
     @Override
@@ -61,12 +68,25 @@ public class ContentActivity extends AppCompatActivity{
         date = (TextView) findViewById(R.id.date);
         visitWebsite = (Button) findViewById(R.id.visitWebsite);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        button = (Button) findViewById(R.id.visitWebsite);
+        scrollView = (ScrollView) findViewById(R.id.scraperView);
+        mWebContent = (WebView) findViewById(R.id.webContent);
+
         toolbar.setNavigationIcon(R.drawable.ic_action_back);
         subtitle = getIntent().getStringExtra(SUBTITLE);
         toolbar.setTitle(subtitle);
         setSupportActionBar(toolbar);
 
         result = new Gson().fromJson(getIntent().getStringExtra(CONTENT_EXTRA), Result.class);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url = result.getUrl();
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
+            }
+        });
         title.setText(result.getTitle());
         date.setText(new SimpleDateFormat("MM/dd/yyyy").format(new Date((long) (result.getDate() * 1000))));
         _requestWebContent(result.getUrl(), result.getTitle().replaceAll("[^a-zA-Z0-9]+", ""));
@@ -74,7 +94,6 @@ public class ContentActivity extends AppCompatActivity{
 
     private void _requestWebContent(String url, String id){
         Gateway gateway = RestClient.getGateway();
-        Log.i("url", url);
         final Call<List<WebContent>> webContent = gateway.getWebContent(url, id);
         webContent.enqueue(new Callback<List<WebContent>>() {
             @Override
@@ -87,8 +106,6 @@ public class ContentActivity extends AppCompatActivity{
             @Override
             public void onFailure(Call<List<WebContent>> call, Throwable t) {
                 Log.i("error", t.toString());
-                //prevent launch from external browser
-                webView.setWebViewClient(new WebViewClient());
                 _loadUrl();
             }
         });
@@ -109,20 +126,22 @@ public class ContentActivity extends AppCompatActivity{
                 "Array.prototype.forEach.call(image, function(element){element.removeAttribute('style');" +
                 "element.removeAttribute('width');"+
                 "element.removeAttribute('height');"+
+                "element.style.marginRight='30px';"+
                 "element.width = "+Float.toString(width)+"});"+
                 "});"+
                 "</script>"+dom;
         webView.loadData(dom, "text/html; charset=utf-8", "UTF-8");
+        visitWebsite.setVisibility(View.VISIBLE);
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                visitWebsite.setVisibility(View.VISIBLE);
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         if (firstTimeLoad) {
-                            if (webView.getMeasuredHeight() < 900) {
+                            if (webView.getMeasuredHeight() < 500) {
+                                scrollView.setVisibility(View.GONE);
                                 _loadUrl();
 
                             }
@@ -142,10 +161,12 @@ public class ContentActivity extends AppCompatActivity{
         visitWebsite.setVisibility(View.GONE);
         DisplayMetrics metrics = getResources().getDisplayMetrics();
         int height = metrics.heightPixels;
-        webView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height));
-        webView.setVerticalScrollBarEnabled(true);
-        webView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
-        webView.loadUrl(result.getUrl());
+        mWebContent.setVisibility(View.VISIBLE);
+        mWebContent.setVerticalScrollBarEnabled(true);
+        mWebContent.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
+        //prevent launch from external browser
+        mWebContent.setWebViewClient(new WebViewClient());
+        mWebContent.loadUrl(result.getUrl());
     }
 
     public static void launchActivity(Activity fromActivity, Result result, String subtitle){
@@ -164,6 +185,11 @@ public class ContentActivity extends AppCompatActivity{
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.share){
+            Intent i = new Intent(Intent.ACTION_SEND);
+            i.setType("text/plain");
+            i.putExtra(Intent.EXTRA_SUBJECT, result.getTitle());
+            i.putExtra(Intent.EXTRA_TEXT, result.getUrl());
+            startActivity(Intent.createChooser(i, result.getTitle()));
             return true;
         }else if(item.getItemId() == android.R.id.home){
             finish();
