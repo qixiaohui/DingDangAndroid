@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.qi.xiaohui.dingdang.R;
 import com.qi.xiaohui.dingdang.adapter.NewsAdapter;
@@ -37,6 +38,7 @@ public class ContentHomeFragment extends android.support.v4.app.Fragment {
     private RecyclerView mRecycleView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private ProgressBar progressBar;
     private NewsAdapter mNewsAdapter;
     private String title;
     private int previousPage = 0;
@@ -65,6 +67,7 @@ public class ContentHomeFragment extends android.support.v4.app.Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.content_home, container, false);
         mRecycleView = (RecyclerView) view.findViewById(R.id.resultView);
+        progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         mRecycleView.setHasFixedSize(false);
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecycleView.setLayoutManager(mLayoutManager);
@@ -104,6 +107,7 @@ public class ContentHomeFragment extends android.support.v4.app.Fragment {
     }
 
     private void _setAdapter(ArrayList<Result> results, String title){
+        progressBar.setVisibility(View.GONE);
         mNewsAdapter = new NewsAdapter(results, getContext(), getActivity(), title);
         mRecycleView.setAdapter(mNewsAdapter);
         maxSize = dataStore.getMax(title);
@@ -113,6 +117,7 @@ public class ContentHomeFragment extends android.support.v4.app.Fragment {
     public void refreshView(){
         previousPage = 0;
         maxSize = 0;
+        progressBar.setVisibility(View.VISIBLE);
         getResults(pageTitle, "1");
         _buildScrollListener();
     }

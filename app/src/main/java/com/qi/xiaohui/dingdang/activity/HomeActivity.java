@@ -63,7 +63,6 @@ public class HomeActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i("current index", Integer.toString(viewPager.getCurrentItem()));
                 ContentHomeFragment contentHomeFragment = ((ContentHomeFragment) contentHomeAdapter.getCachedFragment(viewPager.getCurrentItem()));
                 if(contentHomeFragment != null) {
                     contentHomeFragment.refreshView();

@@ -9,6 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import com.qi.xiaohui.dingdang.R;
 import com.qi.xiaohui.dingdang.adapter.NewsAdapter;
@@ -32,6 +34,7 @@ public class SearchResultActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private RecyclerView mRecycleView;
     private LinearLayoutManager mLayoutManager;
+    private ProgressBar progressBar;
     private NewsAdapter mNewsAdapter;
     private int previousPage = 0;
     private int maxSize = 0;
@@ -41,6 +44,7 @@ public class SearchResultActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_result);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
         toolbar.setNavigationIcon(R.drawable.ic_action_back);
         mRecycleView = (RecyclerView) findViewById(R.id.resultView);
         _handleIntent(getIntent());
@@ -99,6 +103,7 @@ public class SearchResultActivity extends AppCompatActivity {
 
     private void _handleIntent(Intent intent){
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            progressBar.setVisibility(View.VISIBLE);
             String query = intent.getStringExtra(SearchManager.QUERY);
             toolbar.setTitle(query);
             setSupportActionBar(toolbar);
@@ -107,6 +112,7 @@ public class SearchResultActivity extends AppCompatActivity {
     }
 
     private void _setAdapter(ArrayList<Result> results, String title){
+        progressBar.setVisibility(View.GONE);
         mNewsAdapter = new NewsAdapter(results, getApplicationContext(), SearchResultActivity.this, title);
         mRecycleView.setAdapter(mNewsAdapter);
         mNewsAdapter.notifyDataSetChanged();

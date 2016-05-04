@@ -20,6 +20,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -32,8 +33,10 @@ import com.qi.xiaohui.dingdang.model.webcontent.WebContent;
 
 import java.net.SocketTimeoutException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.zip.Inflater;
 
 import retrofit2.Call;
@@ -56,6 +59,7 @@ public class ContentActivity extends AppCompatActivity{
     private Button button;
     private ScrollView scrollView;
     private WebView mWebContent;
+    private ProgressBar progressBar;
 
     private boolean firstTimeLoad = true;
     private String subtitle;
@@ -71,6 +75,7 @@ public class ContentActivity extends AppCompatActivity{
         button = (Button) findViewById(R.id.visitWebsite);
         scrollView = (ScrollView) findViewById(R.id.scraperView);
         mWebContent = (WebView) findViewById(R.id.webContent);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         toolbar.setNavigationIcon(R.drawable.ic_action_back);
         subtitle = getIntent().getStringExtra(SUBTITLE);
@@ -88,7 +93,9 @@ public class ContentActivity extends AppCompatActivity{
             }
         });
         title.setText(result.getTitle());
-        date.setText(new SimpleDateFormat("MM/dd/yyyy").format(new Date((long) (result.getDate() * 1000))));
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        date.setText(simpleDateFormat.format(new Date(Long.parseLong(result.getDate()))));
         _requestWebContent(result.getUrl(), result.getTitle().replaceAll("[^a-zA-Z0-9]+", ""));
     }
 
@@ -98,7 +105,7 @@ public class ContentActivity extends AppCompatActivity{
         webContent.enqueue(new Callback<List<WebContent>>() {
             @Override
             public void onResponse(Call<List<WebContent>> call, Response<List<WebContent>> response) {
-                if(response.body() != null) {
+                if (response.body() != null) {
                     _loadPage(response.body().get(0).getContent());
                 }
             }
@@ -144,8 +151,12 @@ public class ContentActivity extends AppCompatActivity{
                                 scrollView.setVisibility(View.GONE);
                                 _loadUrl();
 
+                            }else{
+                                progressBar.setVisibility(View.GONE);
                             }
                             firstTimeLoad = !firstTimeLoad;
+                        }else{
+                            progressBar.setVisibility(View.GONE);
                         }
                     }
                 }, 500);

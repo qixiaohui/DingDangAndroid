@@ -38,7 +38,7 @@ public class Result {
     private String votes;
     @SerializedName("date")
     @Expose
-    private Double date;
+    private String date;
     @SerializedName("related")
     @Expose
     private List<Object> related = new ArrayList<Object>();
@@ -210,7 +210,7 @@ public class Result {
      * @return
      * The date
      */
-    public Double getDate() {
+    public String getDate() {
         return date;
     }
 
@@ -219,7 +219,7 @@ public class Result {
      * @param date
      * The date
      */
-    public void setDate(Double date) {
+    public void setDate(String date) {
         this.date = date;
     }
 

@@ -3,6 +3,8 @@ package com.qi.xiaohui.dingdang.activity;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 
 import com.qi.xiaohui.dingdang.R;
 import com.qi.xiaohui.dingdang.application.DingDangApplication;
@@ -25,10 +27,13 @@ import retrofit2.Response;
  */
 public class SplashActivity extends Activity {
     private DataStore dataStore;
+    private ImageView splash;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        splash = (ImageView) findViewById(R.id.splashIcon);
+        splash.startAnimation(AnimationUtils.loadAnimation(this, R.anim.rotate));
         _requestData();
     }
 
